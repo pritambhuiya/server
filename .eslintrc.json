@@ -74,7 +74,7 @@
     ],
     "no-extra-parens": "error",
     "no-template-curly-in-string": "error",
-    "array-callback-return": "error",
+    "array-callback-return": "warn",
     "default-param-last": "error",
     "no-constructor-return": "error",
     "no-invalid-this": "error",

@@ -16,19 +16,28 @@ const splitHeaders = (headers) => {
   return headerValuePair;
 };
 
+const parseRequest = (request) => {
+  const CRLF = '\r\n';
+  const [requestLine, ...headers] = request.trim().split(CRLF);
+
+  const { method, uri, protocol } = splitRequestLine(requestLine);
+  const headersObject = splitHeaders(headers);
+
+  return { method, uri, protocol, headers: headersObject };
+};
+
 const onConnection = (socket) => {
   socket.setEncoding('utf8');
 
-  socket.on('data', (request) => {
-    const CRLF = '\r\n';
-    const [requestLine, ...headers] = request.trim().split(CRLF);
-    const { method, uri, protocol } = splitRequestLine(requestLine);
-    const headersObject = splitHeaders(headers);
+  socket.on('data', (usersRequest) => {
+    const request = parseRequest(usersRequest);
+    console.log(request);
 
-    console.log({ method, uri, protocol, headers: headersObject });
-    socket.write('Got your request');
+    const html = '<html><body><h1>Got your request</h1></body></html>';
+    socket.write(html);
     socket.end();
   });
 };
 
-module.exports = { createServer, onConnection, splitRequestLine, splitHeaders };
+module.exports =
+  { createServer, onConnection, splitRequestLine, splitHeaders, parseRequest };

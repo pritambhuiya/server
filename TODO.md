@@ -1,10 +1,13 @@
 # TODO
-- [ ] Create parseRequest function
+- [ ] Handle error code
+- [ ] Handle request
 - [ ] Check connection in browser
 
 # MAYBE
 
 # DONE
+- [x] Create parseRequest function
+- [x] Write test for parseRequest
 - [x] Rename testGetRequest.js to testServer.js
 - [x] Accept port as argument in onConnection function
 - [x] Rename getRequestLine to splitRequestLine
