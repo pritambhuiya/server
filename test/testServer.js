@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { splitRequestLine, splitHeaders, parseRequest } =
+const { splitRequestLine, splitHeaders, parseRequest, handleRequest } =
   require('../src/server.js');
 
 describe('splitRequestLine', () => {
@@ -30,5 +30,13 @@ describe('parseRequest', () => {
       method: 'GET', uri: '/', protocol: 'HTTP/1.1',
       headers: { host: 'localhost:8000' }
     });
+  });
+});
+
+describe('handleRequest', () => {
+  it('Should parse the request', () => {
+    const html = '<html><body><h1>Got your request</h1></body></html>';
+    const response = `HTTP/1.1 200 OK\r\n\r\n${html}`;
+    assert.deepStrictEqual(handleRequest('/'), response);
   });
 });

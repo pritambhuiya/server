@@ -1,11 +1,12 @@
 # TODO
 - [ ] Handle error code
-- [ ] Handle request
-- [ ] Check connection in browser
 
 # MAYBE
 
 # DONE
+- [x] Check connection in browser
+- [x] Extract handle request function
+- [x] Consider html to body
 - [x] Create parseRequest function
 - [x] Write test for parseRequest
 - [x] Rename testGetRequest.js to testServer.js
