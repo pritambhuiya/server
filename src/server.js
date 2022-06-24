@@ -1,29 +1,5 @@
-const CRLF = '\r\n';
-
-const splitRequestLine = (requestLine) => {
-  const [method, uri, protocol] = requestLine.split(' ');
-  return { method, uri, protocol };
-};
-
-const splitHeaders = (headers) => {
-  const headerValuePair = {};
-
-  headers.forEach((header) => {
-    const [key, value] = header.split(': ');
-    headerValuePair[key.toLowerCase()] = value;
-  });
-
-  return headerValuePair;
-};
-
-const parseRequest = (request) => {
-  const [requestLine, ...headers] = request.trim().split(CRLF);
-
-  const { method, uri, protocol } = splitRequestLine(requestLine);
-  const headersObject = splitHeaders(headers);
-
-  return { method, uri, protocol, headers: headersObject };
-};
+const { parseRequest } = require('./parseRequest.js');
+const { Response } = require('./response.js');
 
 const determineStatusCode = (response) => response === 'unknown' ? 404 : 200;
 
@@ -32,10 +8,10 @@ const determineStatusMessage = (statusCode) => {
   return messages[statusCode];
 };
 
-const determineBody = (response) =>
-  `<html><body><h1>${response}</h1></body></html>`;
+// const determineBody = (response) =>
+//   `<html><body><h1>${response}</h1></body></html>`;
 
-const determineResponse = (uri) => {
+const determineBody = (uri) => {
   let response = 'unknown';
   if (uri === '/') {
     response = 'hello';
@@ -46,29 +22,29 @@ const determineResponse = (uri) => {
   return response;
 };
 
-const handleRequest = ({ uri, protocol }) => {
-  const response = determineResponse(uri);
-  const statusCode = determineStatusCode(response);
-  const body = determineBody(response);
+const handleRequest = (socket, { uri, protocol }) => {
+  const body = determineBody(uri);
+  const statusCode = determineStatusCode(body);
   const statusMessage = determineStatusMessage(statusCode);
 
-  return `${protocol} ${statusCode} ${statusMessage}${CRLF}${CRLF}${body}`;
+  const CRLF = '\r\n';
+
+  //consider renaming reply to response
+  const reply = `${protocol} ${statusCode} ${statusMessage}
+  ${CRLF}${CRLF}${body}`;
+
+  const response = new Response(socket);
+  response.send(reply);
 };
 
 const onConnection = (socket) => {
   socket.setEncoding('utf8');
-
   socket.on('data', (usersRequest) => {
     const request = parseRequest(usersRequest);
-    console.log(request.method, request.uri);
 
-    const body = handleRequest(request);
-    socket.write(body);
-    socket.end();
+    console.log(request.method, request.uri);
+    handleRequest(socket, request);
   });
 };
 
-module.exports = {
-  onConnection, splitRequestLine, splitHeaders, parseRequest, handleRequest,
-  determineResponse
-};
+module.exports = { onConnection, handleRequest, determineBody };

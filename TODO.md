@@ -1,14 +1,15 @@
 # TODO
+- [ ] Set status in Response 
+- [ ] Serve file
 - [ ] Implement header in response
   - [ ] Content-type
   - [ ] Content length
-- [ ] Test socket
-- [ ] Serve file
 
 # MAYBE
-- [ ] Consider response class
 
 # DONE
+- [x] Consider response class
+- [ ] ~~Test socket~~
 - [x] Handle status message
 - [x] Extract determineStatusMessage function
 - [x] Test determineResponse function
