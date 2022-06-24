@@ -1,14 +1,20 @@
 # TODO
-- [ ] Handle status code
+- [ ] Extract getRresponse function
 - [ ] Handle status message
+- [ ] Extract getStatusMessage function
 - [ ] Implement header in response
   - [ ] Content-type
   - [ ] Content length
 - [ ] Test socket
+- [ ] Serve file
+
 # MAYBE
 - [ ] Consider response class
 
 # DONE
+- [x] Extract getStatusCode function
+- [x] Handle status code
+- [x] Consider forEach instead of map
 - [x] Handle multiple requests
 - [x] Check connection in browser
 - [x] Extract handle request function

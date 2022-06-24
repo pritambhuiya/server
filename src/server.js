@@ -6,7 +6,7 @@ const splitRequestLine = (requestLine) => {
 const splitHeaders = (headers) => {
   const headerValuePair = {};
 
-  headers.map((header) => {
+  headers.forEach((header) => {
     const [key, value] = header.split(': ');
     headerValuePair[key.toLowerCase()] = value;
   });
@@ -24,7 +24,9 @@ const parseRequest = (request) => {
   return { method, uri, protocol, headers: headersObject };
 };
 
-const handleRequest = ({ uri }) => {
+const getStatusCode = (response) => response === 'unknown' ? 404 : 200;
+
+const handleRequest = ({ uri, protocol }) => {
   let response = 'unknown';
   if (uri === '/') {
     response = 'hello';
@@ -32,8 +34,10 @@ const handleRequest = ({ uri }) => {
     response = 'playing game';
   }
 
+  const statusCode = getStatusCode(response);
+
   const body = `<html><body><h1>${response}</h1></body></html>`;
-  return `HTTP/1.1 200 OK\r\n\r\n${body}`;
+  return `${protocol} ${statusCode} OK\r\n\r\n${body}`;
 };
 
 const onConnection = (socket) => {
@@ -41,7 +45,7 @@ const onConnection = (socket) => {
 
   socket.on('data', (usersRequest) => {
     const request = parseRequest(usersRequest);
-    console.log('request:', request);
+    console.log(request.method, request.uri);
 
     const response = handleRequest(request);
     socket.write(response);

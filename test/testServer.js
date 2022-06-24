@@ -35,17 +35,17 @@ describe('parseRequest', () => {
 
 describe('handleRequest', () => {
   it('Should send hello as response if uri is /', () => {
-    assert.deepStrictEqual(handleRequest({ uri: '/' }),
+    assert.deepStrictEqual(handleRequest({ uri: '/', protocol: 'HTTP/1.1' }),
       'HTTP/1.1 200 OK\r\n\r\n<html><body><h1>hello</h1></body></html>');
   });
 
   it('Should send playing game as response if uri is sai', () => {
-    assert.deepStrictEqual(handleRequest({ uri: '/sai' }),
+    assert.deepStrictEqual(handleRequest({ uri: '/sai', protocol: 'HTTP/1.1' }),
       'HTTP/1.1 200 OK\r\n\r\n<html><body><h1>playing game</h1></body></html>');
   });
 
   it('Should send unknown as response if uri is invalid', () => {
-    assert.deepStrictEqual(handleRequest({ uri: '/a' }),
-      'HTTP/1.1 200 OK\r\n\r\n<html><body><h1>unknown</h1></body></html>');
+    assert.deepStrictEqual(handleRequest({ uri: '/a', protocol: 'HTTP/1.1' }),
+      'HTTP/1.1 404 OK\r\n\r\n<html><body><h1>unknown</h1></body></html>');
   });
 });
