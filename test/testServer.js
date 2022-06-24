@@ -1,6 +1,6 @@
 const assert = require('assert');
-const { splitRequestLine, splitHeaders, parseRequest, handleRequest } =
-  require('../src/server.js');
+const { splitRequestLine, splitHeaders, parseRequest, handleRequest,
+  determineResponse } = require('../src/server.js');
 
 describe('splitRequestLine', () => {
   it('Should return method, uri, httpVersion as object', () => {
@@ -46,6 +46,20 @@ describe('handleRequest', () => {
 
   it('Should send unknown as response if uri is invalid', () => {
     assert.deepStrictEqual(handleRequest({ uri: '/a', protocol: 'HTTP/1.1' }),
-      'HTTP/1.1 404 OK\r\n\r\n<html><body><h1>unknown</h1></body></html>');
+      'HTTP/1.1 404 Not Found\r\n\r\n<html><body><h1>unknown</h1></body></html>');
+  });
+});
+
+describe('determineResponse', () => {
+  it('Should return hello if uri is /', () => {
+    assert.deepStrictEqual(determineResponse('/'), 'hello');
+  });
+
+  it('Should return hello if uri is /sai', () => {
+    assert.deepStrictEqual(determineResponse('/sai'), 'playing game');
+  });
+
+  it('Should return hello if uri is other than / or /sai', () => {
+    assert.deepStrictEqual(determineResponse('/said'), 'unknown');
   });
 });

@@ -27,10 +27,15 @@ const parseRequest = (request) => {
 
 const determineStatusCode = (response) => response === 'unknown' ? 404 : 200;
 
+const determineStatusMessage = (statusCode) => {
+  const messages = { 200: 'OK', 404: 'Not Found' };
+  return messages[statusCode];
+};
+
 const determineBody = (response) =>
   `<html><body><h1>${response}</h1></body></html>`;
 
-const handleRequest = ({ uri, protocol }) => {
+const determineResponse = (uri) => {
   let response = 'unknown';
   if (uri === '/') {
     response = 'hello';
@@ -38,11 +43,16 @@ const handleRequest = ({ uri, protocol }) => {
     response = 'playing game';
   }
 
+  return response;
+};
+
+const handleRequest = ({ uri, protocol }) => {
+  const response = determineResponse(uri);
   const statusCode = determineStatusCode(response);
   const body = determineBody(response);
+  const statusMessage = determineStatusMessage(statusCode);
 
-  return `${protocol} ${statusCode} OK${CRLF}${CRLF}${body}`;
-
+  return `${protocol} ${statusCode} ${statusMessage}${CRLF}${CRLF}${body}`;
 };
 
 const onConnection = (socket) => {
@@ -52,12 +62,13 @@ const onConnection = (socket) => {
     const request = parseRequest(usersRequest);
     console.log(request.method, request.uri);
 
-    const response = handleRequest(request);
-    socket.write(response);
+    const body = handleRequest(request);
+    socket.write(body);
     socket.end();
   });
 };
 
 module.exports = {
-  onConnection, splitRequestLine, splitHeaders, parseRequest, handleRequest
+  onConnection, splitRequestLine, splitHeaders, parseRequest, handleRequest,
+  determineResponse
 };

@@ -1,7 +1,4 @@
 # TODO
-- [ ] Extract determineResponse function
-- [ ] Handle status message
-- [ ] Extract getStatusMessage function
 - [ ] Implement header in response
   - [ ] Content-type
   - [ ] Content length
@@ -12,6 +9,10 @@
 - [ ] Consider response class
 
 # DONE
+- [x] Handle status message
+- [x] Extract determineStatusMessage function
+- [x] Test determineResponse function
+- [x] Extract determineResponse function
 - [x] Extract determineBody function
 - [x] Rename getStatusCode to determineStatusCode
 - [x] Extract getStatusCode function
