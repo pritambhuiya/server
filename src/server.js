@@ -1,3 +1,5 @@
+const CRLF = '\r\n';
+
 const splitRequestLine = (requestLine) => {
   const [method, uri, protocol] = requestLine.split(' ');
   return { method, uri, protocol };
@@ -15,7 +17,6 @@ const splitHeaders = (headers) => {
 };
 
 const parseRequest = (request) => {
-  const CRLF = '\r\n';
   const [requestLine, ...headers] = request.trim().split(CRLF);
 
   const { method, uri, protocol } = splitRequestLine(requestLine);
@@ -24,7 +25,10 @@ const parseRequest = (request) => {
   return { method, uri, protocol, headers: headersObject };
 };
 
-const getStatusCode = (response) => response === 'unknown' ? 404 : 200;
+const determineStatusCode = (response) => response === 'unknown' ? 404 : 200;
+
+const determineBody = (response) =>
+  `<html><body><h1>${response}</h1></body></html>`;
 
 const handleRequest = ({ uri, protocol }) => {
   let response = 'unknown';
@@ -34,10 +38,11 @@ const handleRequest = ({ uri, protocol }) => {
     response = 'playing game';
   }
 
-  const statusCode = getStatusCode(response);
+  const statusCode = determineStatusCode(response);
+  const body = determineBody(response);
 
-  const body = `<html><body><h1>${response}</h1></body></html>`;
-  return `${protocol} ${statusCode} OK\r\n\r\n${body}`;
+  return `${protocol} ${statusCode} OK${CRLF}${CRLF}${body}`;
+
 };
 
 const onConnection = (socket) => {

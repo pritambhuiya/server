@@ -1,5 +1,5 @@
 # TODO
-- [ ] Extract getRresponse function
+- [ ] Extract determineResponse function
 - [ ] Handle status message
 - [ ] Extract getStatusMessage function
 - [ ] Implement header in response
@@ -12,6 +12,8 @@
 - [ ] Consider response class
 
 # DONE
+- [x] Extract determineBody function
+- [x] Rename getStatusCode to determineStatusCode
 - [x] Extract getStatusCode function
 - [x] Handle status code
 - [x] Consider forEach instead of map
