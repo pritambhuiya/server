@@ -1,5 +1,3 @@
-const { createServer } = require('net');
-
 const splitRequestLine = (requestLine) => {
   const [method, uri, protocol] = requestLine.split(' ');
   return { method, uri, protocol };
@@ -26,8 +24,15 @@ const parseRequest = (request) => {
   return { method, uri, protocol, headers: headersObject };
 };
 
-const handleRequest = () => {
-  const body = '<html><body><h1>Got your request</h1></body></html>';
+const handleRequest = ({ uri }) => {
+  let response = 'unknown';
+  if (uri === '/') {
+    response = 'hello';
+  } else if (uri === '/sai') {
+    response = 'playing game';
+  }
+
+  const body = `<html><body><h1>${response}</h1></body></html>`;
   return `HTTP/1.1 200 OK\r\n\r\n${body}`;
 };
 
@@ -36,15 +41,14 @@ const onConnection = (socket) => {
 
   socket.on('data', (usersRequest) => {
     const request = parseRequest(usersRequest);
-    console.log(request);
+    console.log('request:', request);
 
-    const response = handleRequest(request.uri);
+    const response = handleRequest(request);
     socket.write(response);
     socket.end();
   });
 };
 
 module.exports = {
-  createServer, onConnection,
-  splitRequestLine, splitHeaders, parseRequest, handleRequest
+  onConnection, splitRequestLine, splitHeaders, parseRequest, handleRequest
 };

@@ -26,17 +26,26 @@ describe('splitHeaders', () => {
 describe('parseRequest', () => {
   it('Should parse the request', () => {
     assert.deepStrictEqual(parseRequest(
-      'GET / HTTP/1.1\r\nHost: localhost:8000\r\n'), {
+      'GET / HTTP/1.1\r\nHost: localhost:8000\r\nAccept: */*'), {
       method: 'GET', uri: '/', protocol: 'HTTP/1.1',
-      headers: { host: 'localhost:8000' }
+      headers: { host: 'localhost:8000', accept: '*/*' }
     });
   });
 });
 
 describe('handleRequest', () => {
-  it('Should parse the request', () => {
-    const html = '<html><body><h1>Got your request</h1></body></html>';
-    const response = `HTTP/1.1 200 OK\r\n\r\n${html}`;
-    assert.deepStrictEqual(handleRequest('/'), response);
+  it('Should send hello as response if uri is /', () => {
+    assert.deepStrictEqual(handleRequest({ uri: '/' }),
+      'HTTP/1.1 200 OK\r\n\r\n<html><body><h1>hello</h1></body></html>');
+  });
+
+  it('Should send playing game as response if uri is sai', () => {
+    assert.deepStrictEqual(handleRequest({ uri: '/sai' }),
+      'HTTP/1.1 200 OK\r\n\r\n<html><body><h1>playing game</h1></body></html>');
+  });
+
+  it('Should send unknown as response if uri is invalid', () => {
+    assert.deepStrictEqual(handleRequest({ uri: '/a' }),
+      'HTTP/1.1 200 OK\r\n\r\n<html><body><h1>unknown</h1></body></html>');
   });
 });

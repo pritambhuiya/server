@@ -1,9 +1,15 @@
 # TODO
-- [ ] Handle error code
-
+- [ ] Handle status code
+- [ ] Handle status message
+- [ ] Implement header in response
+  - [ ] Content-type
+  - [ ] Content length
+- [ ] Test socket
 # MAYBE
+- [ ] Consider response class
 
 # DONE
+- [x] Handle multiple requests
 - [x] Check connection in browser
 - [x] Extract handle request function
 - [x] Consider html to body

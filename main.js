@@ -1,4 +1,5 @@
-const { createServer, onConnection } = require('./src/server.js');
+const { createServer } = require('net');
+const { onConnection } = require('./src/server.js');
 
 const startServer = (PORT) => {
   const server = createServer(onConnection);
