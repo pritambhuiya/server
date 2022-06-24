@@ -1,40 +1,29 @@
 const { parseRequest } = require('./parseRequest.js');
 const { Response } = require('./response.js');
 
-const determineStatusCode = (response) => response === 'unknown' ? 404 : 200;
-
-const determineStatusMessage = (statusCode) => {
-  const messages = { 200: 'OK', 404: 'Not Found' };
-  return messages[statusCode];
-};
-
 // const determineBody = (response) =>
 //   `<html><body><h1>${response}</h1></body></html>`;
 
 const determineBody = (uri) => {
-  let response = 'unknown';
+  let body = 'unknown';
   if (uri === '/') {
-    response = 'hello';
+    body = 'hello';
   } else if (uri === '/sai') {
-    response = 'playing game';
+    body = 'playing game';
   }
 
-  return response;
+  return body;
 };
 
-const handleRequest = (socket, { uri, protocol }) => {
-  const body = determineBody(uri);
-  const statusCode = determineStatusCode(body);
-  const statusMessage = determineStatusMessage(statusCode);
+const handleRequest = (socket, request) => {
+  const response = new Response(socket, request);
+  const body = determineBody(request.uri);
 
-  const CRLF = '\r\n';
+  if (body === 'unknown') {
+    response.statusCode = 404;
+  }
 
-  //consider renaming reply to response
-  const reply = `${protocol} ${statusCode} ${statusMessage}
-  ${CRLF}${CRLF}${body}`;
-
-  const response = new Response(socket);
-  response.send(reply);
+  response.send(body);
 };
 
 const onConnection = (socket) => {

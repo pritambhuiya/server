@@ -1,5 +1,4 @@
 # TODO
-- [ ] Set status in Response 
 - [ ] Serve file
 - [ ] Implement header in response
   - [ ] Content-type
@@ -8,6 +7,9 @@
 # MAYBE
 
 # DONE
+- [x] Determine response in send method
+- [x] Determine statusMessage in Response 
+- [x] Set status in Response 
 - [x] Consider response class
 - [ ] ~~Test socket~~
 - [x] Handle status message
