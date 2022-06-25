@@ -6,8 +6,10 @@
   - [ ] Content length
 
 # MAYBE
+- [ ] Consider error if directory given
 
 # DONE
+- [x] Implement handler as array
 - [x] Rename main to server
 - [x] Rename server to handleRequest
 - [x] Extracted onConnection into main.js

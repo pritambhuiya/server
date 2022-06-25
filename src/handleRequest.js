@@ -1,28 +1,40 @@
 const fs = require('fs');
 const { Response } = require('./response.js');
 
-const isRoot = (uri) => uri === '/';
+const isRoot = (uri) => uri === './public/';
+const isNotDirectory = (filePath) => !fs.statSync(filePath).isDirectory();
 
-const serverFile = (filePath) => {
+const fileHandler = (response, filePath) => {
   try {
-    return fs.readFileSync(filePath);
+    const body = isRoot(filePath) ? 'hello' : fs.readFileSync(filePath);
+    response.send(body);
+    return true;
+
   } catch (error) {
-    return 'unknown';
+    return false;
   }
 };
-const fileHandler = ({ uri }) => {
-  const filePath = `./public${uri}`;
-  return isRoot(uri) ? 'hello' : serverFile(filePath);
+
+const notFoundHandler = (response, filePath) => {
+  if (!fs.existsSync(filePath) || isNotDirectory(filePath)) {
+    response.statusCode = 404;
+    response.send('not found');
+    return true;
+  }
+
+  return false;
 };
 
 const handleRequest = (socket, request) => {
   const response = new Response(socket, request);
-  const body = fileHandler(request);
+  const filePath = `./public${request.uri}`;
+  const handlers = [fileHandler, notFoundHandler];
 
-  if (body === 'unknown') {
-    response.statusCode = 404;
-  }
-  response.send(body);
+  handlers.forEach((handler) => {
+    if (handler(response, filePath)) {
+      return true;
+    }
+  });
 };
 
 module.exports = { handleRequest, fileHandler };
