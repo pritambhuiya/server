@@ -1,5 +1,6 @@
 # TODO
 - [ ] Implement addition as dynamic handler
+- [ ] Refactoring splitUri
 - [ ] Implement redirection into google if search as dynamic resource
 - [ ] Implement header in response
   - [ ] Content-type
@@ -10,6 +11,7 @@
 - [ ] Consider removing try catch block
 
 # DONE
+- [x] Consider renaming convertIntoUpperCase into toUpperCase
 - [x] Implement convert to upperCase as dynamic handler
 - [x] Create fileNotFound handler
 - [x] Create dynamic handler

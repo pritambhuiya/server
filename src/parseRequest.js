@@ -1,5 +1,8 @@
+const split = (text, delimiter) => text.split(delimiter);
+const hasNoqueries = (uri) => !uri.includes('?');
+
 const splitRequestLine = (requestLine) => {
-  const [method, uri, protocol] = requestLine.split(' ');
+  const [method, uri, protocol] = split(requestLine, ' ');
   return { method, uri, protocol };
 };
 
@@ -7,7 +10,7 @@ const splitHeaders = (headers) => {
   const headerValuePair = {};
 
   headers.forEach((header) => {
-    const [key, value] = header.split(': ');
+    const [key, value] = split(header, ': ');
     headerValuePair[key.toLowerCase()] = value;
   });
 
@@ -15,26 +18,32 @@ const splitHeaders = (headers) => {
 };
 
 const splitUri = (uri) => {
-  if (!uri.includes('?')) {
-    return { resource: uri, query: null, queryParam: null };
+  const queries = [];
+  if (hasNoqueries(uri)) {
+    return { resource: uri, queries };
   }
 
-  const [resource, queryString] = uri.split('?');
-  const [query, queryParam] = queryString.split('=');
+  const [resource, queryString] = split(uri, '?');
+  const rawQueries = split(queryString, '&');
 
-  return { resource, query, queryParam };
+  rawQueries.forEach((rawQuery) => {
+    const [query, queryParam] = split(rawQuery, '=');
+    queries.push({ query, queryParam });
+  });
+
+  return { resource, queries };
 };
 
 const parseRequest = (request) => {
   const CRLF = '\r\n';
   const [requestLine, ...headers] = request.trim().split(CRLF);
-  const headersObject = splitHeaders(headers);
-  const { method, uri, protocol } = splitRequestLine(requestLine);
 
-  const { resource, query, queryParam } = splitUri(uri);
+  const { method, uri, protocol } = splitRequestLine(requestLine);
+  const { resource, queries } = splitUri(uri);
+  const headersObject = splitHeaders(headers);
 
   return {
-    method, protocol, headers: headersObject, resource, query, queryParam
+    method, protocol, headers: headersObject, resource, queries
   };
 };
 
