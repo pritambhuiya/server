@@ -25,9 +25,12 @@ const notFoundHandler = (response, filePath) => {
   return false;
 };
 
-const dynamicHandler = (response, filePath) => {
-  if (filePath === './public/hi') {
-    response.send('hi');
+const convertIntoUpperCase = (text) => text.toUpperCase();
+
+const dynamicHandler = (response, filePath, query, queryParam) => {
+  if (filePath === './public/uppercase' && query) {
+    const upperCasedText = convertIntoUpperCase(queryParam);
+    response.send(upperCasedText);
     return true;
   }
 
@@ -36,11 +39,14 @@ const dynamicHandler = (response, filePath) => {
 
 const handleRequest = (socket, request) => {
   const response = new Response(socket, request);
-  const filePath = `./public${request.uri}`;
+  const { resource, query, queryParam } = request;
+
+  const filePath = `./public${resource}`;
+  console.log('filePath', filePath);
   const handlers = [fileHandler, dynamicHandler, notFoundHandler];
 
   handlers.forEach((handler) => {
-    if (handler(response, filePath)) {
+    if (handler(response, filePath, query, queryParam)) {
       return true;
     }
   });

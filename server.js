@@ -7,7 +7,7 @@ const onConnection = (socket) => {
 
   socket.on('data', (usersRequest) => {
     const request = parseRequest(usersRequest);
-    console.log(request.method, request.uri);
+    console.log(request.method, request.resource);
     handleRequest(socket, request);
   });
 
