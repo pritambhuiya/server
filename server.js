@@ -11,7 +11,7 @@ const onConnection = (socket) => {
     handleRequest(socket, request);
   });
 
-  socket.on('error', (err) => console.log(err));
+  socket.on('error', (err) => console.log(err.message));
 };
 
 const startServer = (PORT) => {

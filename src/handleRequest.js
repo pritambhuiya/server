@@ -25,10 +25,19 @@ const notFoundHandler = (response, filePath) => {
   return false;
 };
 
+const dynamicHandler = (response, filePath) => {
+  if (filePath === './public/hi') {
+    response.send('hi');
+    return true;
+  }
+
+  return false;
+};
+
 const handleRequest = (socket, request) => {
   const response = new Response(socket, request);
   const filePath = `./public${request.uri}`;
-  const handlers = [fileHandler, notFoundHandler];
+  const handlers = [fileHandler, dynamicHandler, notFoundHandler];
 
   handlers.forEach((handler) => {
     if (handler(response, filePath)) {

@@ -1,14 +1,16 @@
 # TODO
-- [ ] Create fileNotFound handler
-- [ ] Create dynamic handler
+- [ ] Implement redirection into google if search as dynamic resource
 - [ ] Implement header in response
   - [ ] Content-type
   - [ ] Content length
 
 # MAYBE
 - [ ] Consider error if directory given
+- [ ] Consider removing try catch block
 
 # DONE
+- [x] Create fileNotFound handler
+- [x] Create dynamic handler
 - [x] Implement handler as array
 - [x] Rename main to server
 - [x] Rename server to handleRequest
