@@ -1,4 +1,6 @@
 # TODO
+- [ ] Create fileNotFound handler
+- [ ] Create dynamic handler
 - [ ] Implement header in response
   - [ ] Content-type
   - [ ] Content length
@@ -6,6 +8,9 @@
 # MAYBE
 
 # DONE
+- [x] Rename main to server
+- [x] Rename server to handleRequest
+- [x] Extracted onConnection into main.js
 - [x] Implement error event for socket
 - [x] Extract fileHandler
 - [x] Serve image file
