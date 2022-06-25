@@ -19,10 +19,12 @@ class Response {
     const CRLF = '\r\n';
 
     const statusMessage = this.#statusMessages[this.#statusCode];
-    const response = `${this.#protocol} ${this.#statusCode} 
-    ${statusMessage}${CRLF}${CRLF}${body}`;
+    const headerLine = `${this.#protocol} ${this.#statusCode} 
+    ${statusMessage}${CRLF}`;
 
-    this.#socket.write(response);
+    this.#socket.write(headerLine);
+    this.#socket.write(CRLF);
+    this.#socket.write(body);
     this.#socket.end();
   }
 }

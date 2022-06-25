@@ -1,18 +1,21 @@
+const fs = require('fs');
 const { parseRequest } = require('./parseRequest.js');
 const { Response } = require('./response.js');
 
-// const determineBody = (response) =>
-//   `<html><body><h1>${response}</h1></body></html>`;
+const serverFile = (path) => fs.readFileSync(path);
+const isRootDirectory = (uri) => uri === '/';
+
+const fileHandler = (filePath) => {
+  try {
+    return serverFile(filePath);
+  } catch (error) {
+    return 'unknown';
+  }
+};
 
 const determineBody = (uri) => {
-  let body = 'unknown';
-  if (uri === '/') {
-    body = 'hello';
-  } else if (uri === '/sai') {
-    body = 'playing game';
-  }
-
-  return body;
+  const filePath = `./public${uri}`;
+  return isRootDirectory(uri) ? 'hello' : fileHandler(filePath);
 };
 
 const handleRequest = (socket, request) => {
@@ -28,12 +31,14 @@ const handleRequest = (socket, request) => {
 
 const onConnection = (socket) => {
   socket.setEncoding('utf8');
+
   socket.on('data', (usersRequest) => {
     const request = parseRequest(usersRequest);
-
     console.log(request.method, request.uri);
     handleRequest(socket, request);
   });
+
+  socket.on('error', (err) => console.log(err));
 };
 
 module.exports = { onConnection, handleRequest, determineBody };

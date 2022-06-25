@@ -6,11 +6,12 @@ describe('determineBody', () => {
     assert.deepStrictEqual(determineBody('/'), 'hello');
   });
 
-  it('Should return hello if uri is /sai', () => {
-    assert.deepStrictEqual(determineBody('/sai'), 'playing game');
+  it('Should return unknown if uri is other than / or file', () => {
+    assert.deepStrictEqual(determineBody('/said'), 'unknown');
   });
 
-  it('Should return hello if uri is other than / or /sai', () => {
-    assert.deepStrictEqual(determineBody('/said'), 'unknown');
+  it('Should return unknown if uri directory', () => {
+    const filePath = '/pokemon';
+    assert.deepStrictEqual(determineBody(filePath), 'unknown');
   });
 });

@@ -1,5 +1,4 @@
 # TODO
-- [ ] Serve file
 - [ ] Implement header in response
   - [ ] Content-type
   - [ ] Content length
@@ -7,6 +6,11 @@
 # MAYBE
 
 # DONE
+- [x] Implement error event for socket
+- [x] Extract fileHandler
+- [x] Serve image file
+- [x] Create .public directory
+- [x] Serve text file
 - [x] Determine response in send method
 - [x] Determine statusMessage in Response 
 - [x] Set status in Response 
