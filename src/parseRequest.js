@@ -1,12 +1,13 @@
 const split = (text, delimiter) => text.split(delimiter);
 const hasNoqueries = (uri) => !uri.includes('?');
+const splitRequest = (request) => request.trim().split('\r\n');
 
-const splitRequestLine = (requestLine) => {
+const parseRequestLine = (requestLine) => {
   const [method, uri, protocol] = split(requestLine, ' ');
   return { method, uri, protocol };
 };
 
-const splitHeaders = (headers) => {
+const parseHeaders = (headers) => {
   const headerValuePair = {};
 
   headers.forEach((header) => {
@@ -17,34 +18,37 @@ const splitHeaders = (headers) => {
   return headerValuePair;
 };
 
-const splitUri = (uri) => {
-  const queries = [];
+const parseQueries = (queries) => {
+  const queriesArray = [];
+
+  queries.forEach((rawQuery) => {
+    const [query, queryParam] = split(rawQuery, '=');
+    queriesArray.push({ query, queryParam });
+  });
+
+  return queriesArray;
+};
+
+const parseUri = (uri) => {
   if (hasNoqueries(uri)) {
-    return { resource: uri, queries };
+    return { resource: uri, queries: [] };
   }
 
   const [resource, queryString] = split(uri, '?');
   const rawQueries = split(queryString, '&');
 
-  rawQueries.forEach((rawQuery) => {
-    const [query, queryParam] = split(rawQuery, '=');
-    queries.push({ query, queryParam });
-  });
-
+  const queries = parseQueries(rawQueries);
   return { resource, queries };
 };
 
 const parseRequest = (request) => {
-  const CRLF = '\r\n';
-  const [requestLine, ...headers] = request.trim().split(CRLF);
+  const [requestLine, ...rawHeaders] = splitRequest(request);
+  const headers = parseHeaders(rawHeaders);
 
-  const { method, uri, protocol } = splitRequestLine(requestLine);
-  const { resource, queries } = splitUri(uri);
-  const headersObject = splitHeaders(headers);
+  const { method, uri, protocol } = parseRequestLine(requestLine);
+  const { resource, queries } = parseUri(uri);
 
-  return {
-    method, protocol, headers: headersObject, resource, queries
-  };
+  return { method, protocol, headers, resource, queries };
 };
 
-module.exports = { parseRequest, splitHeaders, splitRequestLine };
+module.exports = { parseRequest, parseHeaders, parseRequestLine };

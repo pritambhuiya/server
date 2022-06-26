@@ -3,7 +3,7 @@
   - [ ] Accept input as query and store in json
   - [ ] Think about multiple language in form
 - [ ] Implement search as dynamic handler based on json
-- [ ] Refactor splitUri
+- [ ] Refactor parseUri
 - [ ] Implement redirection 
 - [ ] Implement header in response
   - [ ] Content-type
@@ -11,8 +11,15 @@
 
 # MAYBE
 - [ ] Consider removing try catch block
+- [ ] Consider readFile instead of readFileSync in filehandler
 
 # DONE
+- [x] Consider Extracting parseQueries
+- [x] Consider renaming splitUri to parseUri
+- [x] Consider renaming splitRequestLine to parseRequestLine
+- [x] Consider renaming splitHeaders to parseHeaders
+- [x] Consider renaming headerObject
+- [x] Consider Extracting splitRequest
 - [x] Refactor dynamicHandler
 - [x] Pass request and destructure in handlers
 - [x] Consider removing if condition from fileNotFound handler
