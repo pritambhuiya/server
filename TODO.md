@@ -1,5 +1,8 @@
 # TODO
-- [ ] Refactor dynamicHandler
+- [ ] Implement form as dynamic handler
+  - [ ] Accept input as query and store in json
+  - [ ] Think about multiple language in form
+- [ ] Implement search as dynamic handler based on json
 - [ ] Refactor splitUri
 - [ ] Implement redirection 
 - [ ] Implement header in response
@@ -10,6 +13,7 @@
 - [ ] Consider removing try catch block
 
 # DONE
+- [x] Refactor dynamicHandler
 - [x] Pass request and destructure in handlers
 - [x] Consider removing if condition from fileNotFound handler
 - [x] Consider not found if directory given

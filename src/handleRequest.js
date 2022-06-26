@@ -1,9 +1,7 @@
-/* eslint-disable max-statements */
 const fs = require('fs');
 const { Response } = require('./response.js');
 
 const isRoot = (uri) => uri === './public/';
-const toUpperCase = (text) => text.toUpperCase();
 
 const fileHandler = (response, { resource }) => {
   const filePath = `./public${resource}`;
@@ -24,27 +22,28 @@ const notFoundHandler = (response) => {
   return true;
 };
 
+const uppercase = ([queries]) => queries.queryParam.toUpperCase();
+
+const add = ([firstNum, secondNum]) =>
+  +firstNum.queryParam + +secondNum.queryParam;
+
+const doesHandlerNotExist = (handlers, handler) =>
+  Object.keys(handlers).indexOf(handler) < 0;
+
+const isHandlerInvalid = (handlers, handler, queries) =>
+  !queries.length || doesHandlerNotExist(handlers, handler);
+
 const dynamicHandler = (response, { resource, queries }) => {
-  if (!queries.length) {
+  const handlers = { '/uppercase': uppercase, '/add': add };
+  if (isHandlerInvalid(handlers, resource, queries)) {
     return false;
   }
 
-  if (resource === '/uppercase') {
-    const upperCasedText = toUpperCase(queries[0].queryParam);
-    response.send(upperCasedText);
-    return true;
-  }
+  const handler = handlers[resource];
+  const body = handler(queries);
 
-  if (resource === '/add') {
-    const firstNumber = +queries[0].queryParam;
-    const secondNumber = +queries[1].queryParam;
-    const addition = firstNumber + secondNumber;
-
-    response.send(`${addition}`);
-    return true;
-  }
-
-  return false;
+  response.send(`${body}`);
+  return true;
 };
 
 const handleRequest = (socket, request) => {
