@@ -3,10 +3,11 @@ const fs = require('fs');
 const { Response } = require('./response.js');
 
 const isRoot = (uri) => uri === './public/';
-const isNotDirectory = (filePath) => !fs.statSync(filePath).isDirectory();
 const toUpperCase = (text) => text.toUpperCase();
 
-const fileHandler = (response, filePath) => {
+const fileHandler = (response, { resource }) => {
+  const filePath = `./public${resource}`;
+
   try {
     const body = isRoot(filePath) ? 'hello' : fs.readFileSync(filePath);
     response.send(body);
@@ -17,28 +18,24 @@ const fileHandler = (response, filePath) => {
   }
 };
 
-const notFoundHandler = (response, filePath) => {
-  if (!fs.existsSync(filePath) || isNotDirectory(filePath)) {
-    response.statusCode = 404;
-    response.send('not found');
-    return true;
-  }
-
-  return false;
+const notFoundHandler = (response) => {
+  response.statusCode = 404;
+  response.send('not found');
+  return true;
 };
 
-const dynamicHandler = (response, filePath, queries) => {
+const dynamicHandler = (response, { resource, queries }) => {
   if (!queries.length) {
     return false;
   }
 
-  if (filePath === './public/uppercase') {
+  if (resource === '/uppercase') {
     const upperCasedText = toUpperCase(queries[0].queryParam);
     response.send(upperCasedText);
     return true;
   }
 
-  if (filePath === './public/add') {
+  if (resource === '/add') {
     const firstNumber = +queries[0].queryParam;
     const secondNumber = +queries[1].queryParam;
     const addition = firstNumber + secondNumber;
@@ -52,13 +49,10 @@ const dynamicHandler = (response, filePath, queries) => {
 
 const handleRequest = (socket, request) => {
   const response = new Response(socket, request);
-  const { resource, queries } = request;
-
-  const filePath = `./public${resource}`;
   const handlers = [fileHandler, dynamicHandler, notFoundHandler];
 
   handlers.forEach((handler) => {
-    if (handler(response, filePath, queries)) {
+    if (handler(response, request)) {
       return true;
     }
   });

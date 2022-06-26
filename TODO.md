@@ -1,4 +1,5 @@
 # TODO
+- [ ] Refactor dynamicHandler
 - [ ] Refactor splitUri
 - [ ] Implement redirection 
 - [ ] Implement header in response
@@ -6,10 +7,14 @@
   - [ ] Content length
 
 # MAYBE
-- [ ] Consider error if directory given
 - [ ] Consider removing try catch block
 
 # DONE
+- [x] Pass request and destructure in handlers
+- [x] Consider removing if condition from fileNotFound handler
+- [x] Consider not found if directory given
+- [x] Only fileHandlers should know about filePath
+- [x] Choose dynamicHandler based on resource instead of filePath
 - [x] Implement form
   - [x] Implement signUpForm
   - [x] Implement addForm
