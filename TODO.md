@@ -1,7 +1,6 @@
 # TODO
-- [ ] Implement addition as dynamic handler
-- [ ] Refactoring splitUri
-- [ ] Implement redirection into google if search as dynamic resource
+- [ ] Refactor splitUri
+- [ ] Implement redirection 
 - [ ] Implement header in response
   - [ ] Content-type
   - [ ] Content length
@@ -11,6 +10,10 @@
 - [ ] Consider removing try catch block
 
 # DONE
+- [x] Implement form
+  - [x] Implement signUpForm
+  - [x] Implement addForm
+- [x] Implement addition as dynamic handler
 - [x] Consider renaming convertIntoUpperCase into toUpperCase
 - [x] Implement convert to upperCase as dynamic handler
 - [x] Create fileNotFound handler

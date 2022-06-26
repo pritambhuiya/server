@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 const fs = require('fs');
 const { Response } = require('./response.js');
 
@@ -27,9 +28,22 @@ const notFoundHandler = (response, filePath) => {
 };
 
 const dynamicHandler = (response, filePath, queries) => {
-  if (filePath === './public/uppercase' && queries.length) {
+  if (!queries.length) {
+    return false;
+  }
+
+  if (filePath === './public/uppercase') {
     const upperCasedText = toUpperCase(queries[0].queryParam);
     response.send(upperCasedText);
+    return true;
+  }
+
+  if (filePath === './public/add') {
+    const firstNumber = +queries[0].queryParam;
+    const secondNumber = +queries[1].queryParam;
+    const addition = firstNumber + secondNumber;
+
+    response.send(`${addition}`);
     return true;
   }
 
