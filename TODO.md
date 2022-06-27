@@ -1,6 +1,6 @@
 # TODO
-- [ ] Implement form as dynamic handler
-  - [ ] Accept input as query and store in json
+- [x] Implement form as dynamic handler
+  - [x] Accept input as query and store in json
   - [ ] Think about multiple language in form
 - [ ] Implement search as dynamic handler based on json
 - [ ] Refactor parseUri
@@ -14,6 +14,10 @@
 - [ ] Consider readFile instead of readFileSync in filehandler
 
 # DONE
+- [x] Rename queryParam into fieldValue
+- [x] Rerfactor isHandlerInvalid
+- [x] Extract saveDetails and storeInDatabase function
+- [ ] ~~Extract readFile function~~
 - [x] Consider Extracting parseQueries
 - [x] Consider renaming splitUri to parseUri
 - [x] Consider renaming splitRequestLine to parseRequestLine

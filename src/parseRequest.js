@@ -21,9 +21,9 @@ const parseHeaders = (headers) => {
 const parseQueries = (queries) => {
   const queriesArray = [];
 
-  queries.forEach((rawQuery) => {
-    const [query, queryParam] = split(rawQuery, '=');
-    queriesArray.push({ query, queryParam });
+  queries.forEach((query) => {
+    const [fieldName, fieldValue] = split(query, '=');
+    queriesArray.push({ fieldName, fieldValue });
   });
 
   return queriesArray;

@@ -1,13 +1,16 @@
 const fs = require('fs');
 const { Response } = require('./response.js');
 
-const isRoot = (uri) => uri === './public/';
+const isRoot = (uri) => uri === '/';
+
+const writeFile = (database, databaseContent) =>
+  fs.writeFileSync(database, JSON.stringify(databaseContent), 'utf8');
 
 const fileHandler = (response, { resource }) => {
   const filePath = `./public${resource}`;
 
   try {
-    const body = isRoot(filePath) ? 'hello' : fs.readFileSync(filePath);
+    const body = isRoot(resource) ? 'hello' : fs.readFileSync(filePath);
     response.send(body);
     return true;
 
@@ -25,16 +28,36 @@ const notFoundHandler = (response) => {
 const uppercase = ([queries]) => queries.queryParam.toUpperCase();
 
 const add = ([firstNum, secondNum]) =>
-  +firstNum.queryParam + +secondNum.queryParam;
+  +firstNum.fieldValue + +secondNum.fieldValue;
 
-const doesHandlerNotExist = (handlers, handler) =>
-  Object.keys(handlers).indexOf(handler) < 0;
+const saveDetails = (queries) => {
+  const details = {};
+  queries.forEach(({ fieldName, fieldValue }) => {
+    details[fieldName] = fieldValue;
+  });
+
+  return details;
+};
+
+const storeInDatabase = (details) => {
+  const database = './.data/details.json';
+  const databaseContent = JSON.parse(fs.readFileSync(database, 'utf8'));
+
+  databaseContent[details.id] = details;
+  writeFile(database, databaseContent);
+};
+
+const signUp = (queries) => {
+  const details = saveDetails(queries);
+  storeInDatabase(details);
+  return 'sign up successful.';
+};
 
 const isHandlerInvalid = (handlers, handler, queries) =>
-  !queries.length || doesHandlerNotExist(handlers, handler);
+  !handlers[handler] || !queries.length;
 
 const dynamicHandler = (response, { resource, queries }) => {
-  const handlers = { '/uppercase': uppercase, '/add': add };
+  const handlers = { '/uppercase': uppercase, '/add': add, '/signUp': signUp };
   if (isHandlerInvalid(handlers, resource, queries)) {
     return false;
   }
