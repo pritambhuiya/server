@@ -14,6 +14,7 @@
 - [ ] Consider readFile instead of readFileSync in filehandler
 
 # DONE
+- [x] Keep consistency in contract of handler by changing internal contract
 - [x] Rename queryParam into fieldValue
 - [x] Rerfactor isHandlerInvalid
 - [x] Extract saveDetails and storeInDatabase function

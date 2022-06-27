@@ -1,13 +1,13 @@
 const fs = require('fs');
 const { Response } = require('./response.js');
 
-const isRoot = (uri) => uri === '/';
+const isRoot = (path) => path === '/';
 
 const writeFile = (database, databaseContent) =>
   fs.writeFileSync(database, JSON.stringify(databaseContent), 'utf8');
 
-const fileHandler = (response, { resource }) => {
-  const filePath = `./public${resource}`;
+const fileHandler = ({ resource }, response) => {
+  const filePath = './public' + resource;
 
   try {
     const body = isRoot(resource) ? 'hello' : fs.readFileSync(filePath);
@@ -19,19 +19,27 @@ const fileHandler = (response, { resource }) => {
   }
 };
 
-const notFoundHandler = (response) => {
+const notFoundHandler = (request, response) => {
   response.statusCode = 404;
   response.send('not found');
   return true;
 };
 
-const uppercase = ([queries]) => queries.queryParam.toUpperCase();
+const uppercase = ([queries], response) => {
+  const upperCasedText = queries.fieldValue.toUpperCase();
+  response.send(upperCasedText);
+  return true;
+};
 
-const add = ([firstNum, secondNum]) =>
-  +firstNum.fieldValue + +secondNum.fieldValue;
+const add = ([firstNum, secondNum], response) => {
+  const sum = +firstNum.fieldValue + +secondNum.fieldValue;
+  response.send('' + sum);
+  return true;
+};
 
 const saveDetails = (queries) => {
   const details = {};
+
   queries.forEach(({ fieldName, fieldValue }) => {
     details[fieldName] = fieldValue;
   });
@@ -47,34 +55,33 @@ const storeInDatabase = (details) => {
   writeFile(database, databaseContent);
 };
 
-const signUp = (queries) => {
+const signUp = (queries, response) => {
   const details = saveDetails(queries);
   storeInDatabase(details);
-  return 'sign up successful.';
+
+  response.send('sign up successful.');
+  return true;
 };
 
 const isHandlerInvalid = (handlers, handler, queries) =>
   !handlers[handler] || !queries.length;
 
-const dynamicHandler = (response, { resource, queries }) => {
+const dynamicHandler = ({ resource, queries }, response) => {
   const handlers = { '/uppercase': uppercase, '/add': add, '/signUp': signUp };
   if (isHandlerInvalid(handlers, resource, queries)) {
     return false;
   }
 
   const handler = handlers[resource];
-  const body = handler(queries);
-
-  response.send(`${body}`);
-  return true;
+  return handler(queries, response);
 };
 
-const handleRequest = (socket, request) => {
+const handleRequest = (request, socket) => {
   const response = new Response(socket, request);
   const handlers = [fileHandler, dynamicHandler, notFoundHandler];
 
   handlers.forEach((handler) => {
-    if (handler(response, request)) {
+    if (handler(request, response)) {
       return true;
     }
   });
